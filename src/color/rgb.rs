@@ -18,7 +18,16 @@ imp Rgb {
 
     }
 
+    pub fn from_hex_str(s: &str) -> Result<Rgb, ParseError>{
 
+        match from_str::hex(s){
+
+            Ok(rgb_tuple) => Ok(Rgb::from_tuple(&rgb_tuple)),
+            Err(err) => Err(err),
+
+        }
+
+    }
 
 }
 
@@ -66,6 +75,27 @@ imp Color for Rgb{
     fn set_blue(&self, value: f32) -> Rgb{
 
         Rgb{r: self.r, b: self.b, g: normalize_rgb_unit(value), a: self.a}
+
+    }
+
+    fn to_css_str(&self) -> String {
+
+        let (r, g, b) = as_rounded_rgb_tuple(&self.as_tuple())
+        format!("RGB{},{},{}", r, g, b);
+
+    }
+
+    fn from_tuple(t: #ColorTuple) -> Rgb{
+
+        let (r, g, b) = normalize_rgb(&t);
+        
+        Rgb (r, g, b, a: None);
+
+    }
+
+    fn as_tuple(&self) -> ColorTuple {
+
+        (self.r, self.g, self.b)
 
     }
 
